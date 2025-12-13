@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerBridge</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Leaflet Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+body,html { height:100%; width:100%; background:#f5f6fa; scroll-behavior:smooth; }
+
+/* Navbar */
+.navbar {
+  display:flex; justify-content:space-between; align-items:center;
+  background:#2f3640; color:#fff; padding:15px 50px; position:sticky; top:0; z-index:1000; display:none;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+.navbar .logo { font-size:28px; font-weight:700; cursor:pointer; letter-spacing:1px; }
+.navbar ul { list-style:none; display:flex; margin:0; padding:0; }
+.navbar ul li { margin-left:30px; cursor:pointer; transition:0.3s; font-weight:600; }
+.navbar ul li:hover { color:#1abc9c; }
+
+/* Landing */
+#landing {
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  height:100vh; text-align:center; background:linear-gradient(135deg,#1abc9c,#16a085);
+  color:#fff; padding:20px;
+}
+#landing h1 { font-size:68px; font-weight:800; margin-bottom:20px; text-shadow:3px 3px 15px rgba(0,0,0,0.2);}
+#landing p { font-size:22px; max-width:850px; margin-bottom:50px; line-height:1.8; text-shadow:1px 1px 5px rgba(0,0,0,0.2);}
+#landing button { padding:18px 45px; font-size:18px; border:none; border-radius:12px; cursor:pointer; background:#fff; color:#16a085; font-weight:700; box-shadow:0 8px 20px rgba(0,0,0,0.2); transition:0.3s;}
+#landing button:hover { background:#f1f1f1; transform:translateY(-4px); }
+
+/* Sections */
+section { padding:80px 20px; min-height:100vh; transition:all 0.5s ease; }
+.hidden { display:none; }
+
+/* Forms */
+.auth-box {
+  background:#fff; padding:35px; border-radius:20px; box-shadow:0 15px 35px rgba(0,0,0,0.15);
+  max-width:450px; margin:50px auto; text-align:center; animation: slideUp 0.8s ease;
+}
+.auth-box h3 { margin-bottom:20px; font-size:28px; font-weight:700; color:#2f3640; }
+.auth-box input, .auth-box select {
+  width:100%; padding:15px; margin:12px 0; border-radius:10px; border:1px solid #dcdde1; font-size:16px;
+  transition:0.3s; outline:none;
+}
+.auth-box input:focus, .auth-box select:focus { border-color:#1abc9c; box-shadow:0 0 10px rgba(26,188,156,0.2);}
+.auth-box button { width:100%; padding:14px; margin-top:15px; border:none; border-radius:10px; background:#1abc9c; color:#fff; font-weight:700; cursor:pointer; font-size:16px; transition:0.3s; box-shadow:0 6px 15px rgba(26,188,156,0.3);}
+.auth-box button:hover { background:#16a085; transform:translateY(-3px);}
+.auth-box p { margin-top:18px; font-size:14px; color:#555; cursor:pointer; }
+.auth-box p span { color:#1abc9c; font-weight:600; }
+
+/* Dashboard */
+.dashboard-container { display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; }
+.dashboard-box { background:#fff; width:320px; margin:20px; padding:25px; border-radius:20px; box-shadow:0 15px 35px rgba(0,0,0,0.1); transition:0.3s; text-align:center; }
+.dashboard-box:hover { transform:translateY(-5px); }
+.dashboard-box h3 { margin-bottom:15px; color:#2f3640; font-size:20px; font-weight:700; }
+.dashboard-box ul { text-align:left; padding-left:20px; }
+#map { width:100%; height:300px; border-radius:12px; background:#dcdde1; margin-top:12px; display:flex; align-items:center; justify-content:center; color:#555; font-weight:600; }
+
+/* Animations */
+@keyframes slideUp { from {opacity:0; transform:translateY(50px);} to {opacity:1; transform:translateY(0);} }
+
+/* Responsive */
+@media(max-width:768px){ .dashboard-container{ flex-direction:column; align-items:center; } #landing h1{font-size:48px;} #landing p{font-size:18px;} }
+</style>
+</head>
+<body>
+
+<!-- Landing -->
+<section id="landing">
+  <h1>Welcome to CareerBridge</h1>
+  <p>Empowering your career journey! Identify skill gaps, learn new skills, get recommended internships, join hackathons, and discover nearby learning centers — all in one platform.</p>
+  <button onclick="showLogin()">Get Started</button>
+</section>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="logo">CareerBridge</div>
+  <ul>
+    <li onclick="showSection('dashboard')">Dashboard</li>
+    <li onclick="logout()">Logout</li>
+  </ul>
+</nav>
+
+<!-- Login -->
+<section id="login-section">
+  <div class="auth-box">
+    <h3>Login</h3>
+    <input id="login-email" type="email" placeholder="Email">
+    <input id="login-password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p>First time user? <span onclick="showSection('signup-section')">Register here</span></p>
+    <div id="login-message"></div>
+  </div>
+</section>
+
+<!-- Signup -->
+<section id="signup-section">
+  <div class="auth-box">
+    <h3>Signup</h3>
+    <input id="signup-email" type="email" placeholder="Email">
+    <input id="signup-password" type="password" placeholder="Password">
+    <button onclick="signup()">Signup</button>
+    <div id="signup-message"></div>
+  </div>
+</section>
+
+<!-- Skills Selection -->
+<section id="skills-section">
+  <div class="auth-box">
+    <h3>Enter Your Skills & Select Domain</h3>
+    <input id="user-skills" type="text" placeholder="Enter comma separated skills">
+    <select id="user-domain">
+      <option value="">Select Domain</option>
+      <option value="Web Development">Web Development</option>
+      <option value="Data Science">Data Science</option>
+      <option value="AI/ML">AI/ML</option>
+      <option value="Embedded Systems">Embedded Systems</option>
+    </select>
+    <button onclick="analyzeSkills()">Submit</button>
+  </div>
+</section>
+
+<!-- Dashboard -->
+<section id="dashboard">
+  <h2 style="text-align:center; margin-bottom:30px;">Your Skill Gap Dashboard</h2>
+  <div class="dashboard-container">
+    <div class="dashboard-box">
+      <h3>Skills Entered</h3>
+      <ul id="skills-list"></ul>
+    </div>
+    <div class="dashboard-box">
+      <h3>Domain</h3>
+      <p id="domain-display"></p>
+    </div>
+    <div class="dashboard-box">
+      <h3>Suggested Roadmap</h3>
+      <ul id="roadmap"></ul>
+    </div>
+    <div class="dashboard-box">
+      <h3>Skill Gaps</h3>
+      <ul id="resources"></ul>
+    </div>
+    <div class="dashboard-box">
+      <h3>Nearby Learning Centers</h3>
+      <div id="map"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ===== User Auth =====
+let users = [];
+let currentUser = null;
+
+function showSection(id){
+  document.querySelectorAll('section').forEach(sec => sec.style.display='none');
+  document.getElementById(id).style.display='block';
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function showLogin(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('navbar').style.display='flex';
+  showSection('login-section');
+}
+
+function signup(){
+  const email = document.getElementById('signup-email').value;
+  const password = document.getElementById('signup-password').value;
+  const msg = document.getElementById('signup-message');
+  if(email && password){
+    if(users.find(u=>u.email===email)){
+      msg.style.color='red'; msg.innerText='Email exists! Login instead.';
+    } else {
+      users.push({email,password});
+      msg.style.color='green'; msg.innerText='Account created! Please login.';
+      setTimeout(()=>showSection('login-section'),1000);
+    }
+  } else { msg.style.color='red'; msg.innerText='Fill all fields.'; }
+}
+
+function login(){
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-message');
+  const user = users.find(u=>u.email===email && u.password===password);
+  if(user){
+    currentUser=user; msg.style.color='green'; msg.innerText='Login successful!';
+    setTimeout(()=>showSection('skills-section'),500);
+  } else { msg.style.color='red'; msg.innerText='Invalid email/password!'; }
+}
+
+function logout(){
+  currentUser=null;
+  showSection('login-section');
+}
+
+// ===== Call Backend for Domain Analysis =====
+async function analyzeSkills(){
+  const skillsInput = document.getElementById('user-skills').value;
+  const domain = document.getElementById('user-domain').value;
+
+  if(!skillsInput || !domain){
+    alert('Enter skills and select domain');
+    return;
+  }
+
+  const skills = skillsInput.split(',').map(s=>s.trim());
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/analyze', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ domain, skills })
+    });
+
+    const data = await response.json();
+    if(data.error){
+      alert(data.error); return;
+    }
+
+    // Populate dashboard
+    document.getElementById('skills-list').innerHTML='';
+    skills.forEach(skill=>{
+      const li = document.createElement('li'); li.innerText=skill;
+      document.getElementById('skills-list').appendChild(li);
+    });
+
+    document.getElementById('domain-display').innerText=domain;
+
+    // Roadmap
+    const roadmapList = document.getElementById('roadmap');
+    roadmapList.innerHTML='';
+    data.roadmap.forEach(item=>{
+      const li=document.createElement('li'); li.innerText=item; roadmapList.appendChild(li);
+    });
+
+    // Skill gaps
+    const resourcesList = document.getElementById('resources');
+    resourcesList.innerHTML='';
+    for(const [level, skills] of Object.entries(data.gaps)){
+      skills.forEach(skill=>{
+        const li=document.createElement('li'); li.innerText=`${skill} (${level})`; resourcesList.appendChild(li);
+      });
+    }
+
+    alert(`Your readiness score: ${data.score}% - ${data.verdict}`);
+
+    // Show dashboard
+    document.querySelectorAll('section').forEach(sec=>sec.style.display='none');
+    document.getElementById('dashboard').style.display='block';
+    window.scrollTo({ top:0, behavior:'smooth' });
+
+    // Show map
+    showMap();
+
+  } catch(error){
+    console.error('Error connecting to backend:', error);
+    alert('Could not connect to backend. Make sure FastAPI is running at http://127.0.0.1:8000');
+  }
+}
+
+// ===== Leaflet Map =====
+function showMap() {
+  const mapDiv = document.getElementById('map');
+  mapDiv.innerHTML=""; // clear old map
+
+  const defaultLat = 40.7128;
+  const defaultLng = -74.0060;
+
+  window.map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(window.map);
+
+  const centers = [
+    {name:"SkillUp Center", lat:40.716, lng:-74.003},
+    {name:"Tech Academy", lat:40.710, lng:-74.010},
+    {name:"Hackathon Hub", lat:40.718, lng:-74.008}
+  ];
+
+  centers.forEach(center=>{
+    L.marker([center.lat, center.lng]).addTo(window.map)
+      .bindPopup(`<b>${center.name}</b>`);
+  });
+
+  window.map.invalidateSize(); // force map to render
+}
+</script>
+
+</body>
+</html>
