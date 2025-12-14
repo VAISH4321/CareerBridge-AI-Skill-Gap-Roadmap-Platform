@@ -1,304 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
 <title>CareerBridge</title>
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-<!-- Leaflet Map -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.1/lottie.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-body,html { height:100%; width:100%; background:#f5f6fa; scroll-behavior:smooth; }
-
-/* Navbar */
-.navbar {
-  display:flex; justify-content:space-between; align-items:center;
-  background:#2f3640; color:#fff; padding:15px 50px; position:sticky; top:0; z-index:1000; display:none;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-.navbar .logo { font-size:28px; font-weight:700; cursor:pointer; letter-spacing:1px; }
-.navbar ul { list-style:none; display:flex; margin:0; padding:0; }
-.navbar ul li { margin-left:30px; cursor:pointer; transition:0.3s; font-weight:600; }
-.navbar ul li:hover { color:#1abc9c; }
-
-/* Landing */
-#landing {
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
-  height:100vh; text-align:center; background:linear-gradient(135deg,#1abc9c,#16a085);
-  color:#fff; padding:20px;
-}
-#landing h1 { font-size:68px; font-weight:800; margin-bottom:20px; text-shadow:3px 3px 15px rgba(0,0,0,0.2);}
-#landing p { font-size:22px; max-width:850px; margin-bottom:50px; line-height:1.8; text-shadow:1px 1px 5px rgba(0,0,0,0.2);}
-#landing button { padding:18px 45px; font-size:18px; border:none; border-radius:12px; cursor:pointer; background:#fff; color:#16a085; font-weight:700; box-shadow:0 8px 20px rgba(0,0,0,0.2); transition:0.3s;}
-#landing button:hover { background:#f1f1f1; transform:translateY(-4px); }
-
-/* Sections */
-section { padding:80px 20px; min-height:100vh; transition:all 0.5s ease; }
-.hidden { display:none; }
-
-/* Forms */
-.auth-box {
-  background:#fff; padding:35px; border-radius:20px; box-shadow:0 15px 35px rgba(0,0,0,0.15);
-  max-width:450px; margin:50px auto; text-align:center; animation: slideUp 0.8s ease;
-}
-.auth-box h3 { margin-bottom:20px; font-size:28px; font-weight:700; color:#2f3640; }
-.auth-box input, .auth-box select {
-  width:100%; padding:15px; margin:12px 0; border-radius:10px; border:1px solid #dcdde1; font-size:16px;
-  transition:0.3s; outline:none;
-}
-.auth-box input:focus, .auth-box select:focus { border-color:#1abc9c; box-shadow:0 0 10px rgba(26,188,156,0.2);}
-.auth-box button { width:100%; padding:14px; margin-top:15px; border:none; border-radius:10px; background:#1abc9c; color:#fff; font-weight:700; cursor:pointer; font-size:16px; transition:0.3s; box-shadow:0 6px 15px rgba(26,188,156,0.3);}
-.auth-box button:hover { background:#16a085; transform:translateY(-3px);}
-.auth-box p { margin-top:18px; font-size:14px; color:#555; cursor:pointer; }
-.auth-box p span { color:#1abc9c; font-weight:600; }
-
-/* Dashboard */
-.dashboard-container { display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px; }
-.dashboard-box { background:#fff; width:320px; margin:20px; padding:25px; border-radius:20px; box-shadow:0 15px 35px rgba(0,0,0,0.1); transition:0.3s; text-align:center; }
-.dashboard-box:hover { transform:translateY(-5px); }
-.dashboard-box h3 { margin-bottom:15px; color:#2f3640; font-size:20px; font-weight:700; }
-.dashboard-box ul { text-align:left; padding-left:20px; }
-#map { width:100%; height:300px; border-radius:12px; background:#dcdde1; margin-top:12px; display:flex; align-items:center; justify-content:center; color:#555; font-weight:600; }
-
-/* Animations */
-@keyframes slideUp { from {opacity:0; transform:translateY(50px);} to {opacity:1; transform:translateY(0);} }
-
-/* Responsive */
-@media(max-width:768px){ .dashboard-container{ flex-direction:column; align-items:center; } #landing h1{font-size:48px;} #landing p{font-size:18px;} }
+:root {--primary:#14b8a6;--primary-light:#2dd1c3;--dark:#0f172a;--gray:#6b7280;--bg:#f9fbfc;--shadow:rgba(0,0,0,0.08);}
+* {box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body {margin:0;background:var(--bg);color:var(--dark);scroll-behavior:smooth;}
+section {padding:90px 20px;}
+nav {display:flex;justify-content:space-between;align-items:center;padding:22px 60px;position:sticky;top:0;background:rgba(249,251,252,0.95);backdrop-filter:blur(12px);z-index:100;transition:0.3s;}
+nav h2 {font-weight:700;font-size:28px;color:var(--primary);}
+nav button {padding:12px 28px;border-radius:14px;border:none;background:linear-gradient(135deg,#14b8a6,#2dd1c3);color:white;font-weight:600;cursor:pointer;transition:0.35s;}
+nav button:hover {transform:translateY(-3px);box-shadow:0 12px 30px var(--shadow);}
+.hero {min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at top, #e6fffa, var(--bg));position:relative;}
+.hero h1 {font-size:3.8rem;line-height:1.2;font-weight:700;}
+.hero h1 span {color:var(--primary);}
+.hero p {font-size:1.2rem;max-width:680px;margin:20px auto 40px;color:var(--gray);}
+.primary {padding:16px 42px;border-radius:18px;background:linear-gradient(135deg,#14b8a6,#2dd1c3);color:white;border:none;font-weight:600;cursor:pointer;transition:0.35s;}
+.primary:hover {transform:translateY(-4px);box-shadow:0 16px 45px rgba(20,184,166,0.4);}
+.features {display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:30px;margin-top:60px;}
+.feature-card {background:linear-gradient(135deg,#14b8a6,#2dd1c3);color:white;padding:36px 24px;border-radius:24px;text-align:center;font-weight:600;font-size:1.1rem;transition:0.35s;cursor:pointer;position:relative;overflow:hidden;}
+.feature-card::before {content:"";position:absolute;width:120%;height:120%;background:rgba(255,255,255,0.1);top:-110%;left:-110%;transform:rotate(45deg);transition:all 0.7s ease-in-out;}
+.feature-card:hover::before {top:-10%;left:-10%;}
+.feature-card i {font-size:2.5rem;margin-bottom:12px;display:block;}
+.steps {display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:30px;margin-top:60px;}
+.step {background:white;padding:30px;border-radius:20px;border-left:6px solid var(--primary);text-align:center;font-weight:500;font-size:1.05rem;transition:0.35s;cursor:pointer;}
+.step:hover {transform:scale(1.05);box-shadow:0 12px 35px var(--shadow);}
+.step i {font-size:2rem;margin-bottom:12px;display:block;color:var(--primary);}
+.demo-box {background:white;padding:40px 30px;border-radius:28px;box-shadow:0 18px 50px var(--shadow);max-width:700px;margin:40px auto;text-align:center;transition:0.35s;position:relative;}
+.demo-box input,.demo-box select {width:100%;padding:16px;margin:14px 0;border-radius:12px;border:1px solid #ddd;font-size:1rem;transition:0.3s;}
+.demo-box input:focus,.demo-box select:focus {border-color:var(--primary);outline:none;box-shadow:0 6px 20px rgba(20,184,166,0.2);}
+.timeline {max-width:700px;margin:60px auto;position:relative;}
+.timeline::before {content:"";position:absolute;left:50%;top:0;width:4px;height:100%;background:var(--primary);transform:translateX(-50%);}
+.milestone {background:white;padding:20px 25px;border-radius:20px;width:45%;position:relative;margin:40px 0;box-shadow:0 10px 30px var(--shadow);transition:0.3s;}
+.milestone:nth-child(odd){left:0;}
+.milestone:nth-child(even){left:55%;}
+.milestone::after {content:"";position:absolute;top:20px;width:18px;height:18px;background:var(--primary);border-radius:50%;}
+.milestone:nth-child(odd)::after{right:-34px;}
+.milestone:nth-child(even)::after{left:-34px;}
+.milestone:hover{transform:translateY(-6px) scale(1.03);}
+.reveal {opacity:0;transform:translateY(40px);transition:0.8s;}
+.reveal.show {opacity:1;transform:translateY(0);}
+@media(max-width:768px){nav{flex-direction:column;padding:16px 20px;}.hero h1{font-size:2.6rem;}.features,.steps{grid-template-columns:1fr;}.milestone:nth-child(even),.milestone:nth-child(odd){left:0;}}
+#profileModal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;}
+#profileModal .modal-content {background:white;padding:30px;border-radius:20px;max-width:500px;width:90%;}
+#profileModal input{margin:10px 0;padding:12px;border-radius:12px;border:1px solid #ddd;width:100%;}
+#profileModal button{margin-top:12px;width:100%;}
 </style>
 </head>
 <body>
 
-<!-- Landing -->
-<section id="landing">
-  <h1>Welcome to CareerBridge</h1>
-  <p>Empowering your career journey! Identify skill gaps, learn new skills, get recommended internships, join hackathons, and discover nearby learning centers — all in one platform.</p>
-  <button onclick="showLogin()">Get Started</button>
-</section>
-
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-  <div class="logo">CareerBridge</div>
-  <ul>
-    <li onclick="showSection('dashboard')">Dashboard</li>
-    <li onclick="logout()">Logout</li>
-  </ul>
+<nav>
+  <h2>CareerBridge</h2>
+  <button id="getStartedBtn" class="primary">Get Started</button>
 </nav>
 
-<!-- Login -->
-<section id="login-section">
-  <div class="auth-box">
-    <h3>Login</h3>
-    <input id="login-email" type="email" placeholder="Email">
-    <input id="login-password" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p>First time user? <span onclick="showSection('signup-section')">Register here</span></p>
-    <div id="login-message"></div>
+<section class="hero">
+  <div id="hero-lottie" style="width:300px;height:300px;margin-bottom:20px;"></div>
+  <h1>Career <span>Clarity</span> Starts Here</h1>
+  <p>Analyze your skills. Discover gaps. Follow a roadmap. Unlock opportunities.</p>
+  <button class="primary" id="heroAnalyzeBtn">Analyze My Skills</button>
+</section>
+
+<section class="reveal">
+  <h2 style="text-align:center">Powerful <span style="color:#14b8a6">Features</span></h2>
+  <div class="features">
+    <div class="feature-card"><i class="fa-solid fa-chart-line"></i>Skill Analysis</div>
+    <div class="feature-card"><i class="fa-solid fa-magnifying-glass"></i>Gap Detection</div>
+    <div class="feature-card"><i class="fa-solid fa-road"></i>Personalized Roadmap</div>
+    <div class="feature-card"><i class="fa-solid fa-handshake"></i>Hackathons & Internships</div>
   </div>
 </section>
 
-<!-- Signup -->
-<section id="signup-section">
-  <div class="auth-box">
-    <h3>Signup</h3>
-    <input id="signup-email" type="email" placeholder="Email">
-    <input id="signup-password" type="password" placeholder="Password">
-    <button onclick="signup()">Signup</button>
-    <div id="signup-message"></div>
+<section class="reveal">
+  <h2 style="text-align:center">How It <span style="color:#14b8a6">Works</span></h2>
+  <div class="steps">
+    <div class="step"><i class="fa-solid fa-keyboard"></i>Enter Skills</div>
+    <div class="step"><i class="fa-solid fa-network-wired"></i>Select Domain</div>
+    <div class="step"><i class="fa-solid fa-chart-simple"></i>Analyze Profile</div>
+    <div class="step"><i class="fa-solid fa-rocket"></i>Get Roadmap</div>
   </div>
 </section>
 
-<!-- Skills Selection -->
-<section id="skills-section">
-  <div class="auth-box">
-    <h3>Enter Your Skills & Select Domain</h3>
-    <input id="user-skills" type="text" placeholder="Enter comma separated skills">
-    <select id="user-domain">
-      <option value="">Select Domain</option>
-      <option value="Web Development">Web Development</option>
-      <option value="Data Science">Data Science</option>
-      <option value="AI/ML">AI/ML</option>
-      <option value="Embedded Systems">Embedded Systems</option>
+<section class="reveal">
+  <h2 style="text-align:center">Live <span style="color:#14b8a6">Demo</span></h2>
+  <div class="demo-box">
+    <input id="demoSkills" placeholder="Your skills (e.g. Python, DSA)">
+    <select id="demoDomain">
+      <option value="web">Software/Web</option>
+      <option value="ai">AI/ML</option>
+      <option value="iot">IoT</option>
     </select>
-    <button onclick="analyzeSkills()">Submit</button>
+    <button class="primary" id="analyzeBtn">Analyze</button>
   </div>
 </section>
 
-<!-- Dashboard -->
-<section id="dashboard">
-  <h2 style="text-align:center; margin-bottom:30px;">Your Skill Gap Dashboard</h2>
-  <div class="dashboard-container">
-    <div class="dashboard-box">
-      <h3>Skills Entered</h3>
-      <ul id="skills-list"></ul>
-    </div>
-    <div class="dashboard-box">
-      <h3>Domain</h3>
-      <p id="domain-display"></p>
-    </div>
-    <div class="dashboard-box">
-      <h3>Suggested Roadmap</h3>
-      <ul id="roadmap"></ul>
-    </div>
-    <div class="dashboard-box">
-      <h3>Skill Gaps</h3>
-      <ul id="resources"></ul>
-    </div>
-    <div class="dashboard-box">
-      <h3>Nearby Learning Centers</h3>
-      <div id="map"></div>
-    </div>
+<section class="reveal">
+  <h2 style="text-align:center">Career <span style="color:#14b8a6">Roadmap</span></h2>
+  <div class="timeline">
+    <div class="milestone">Week 1 → Learn DSA</div>
+    <div class="milestone">Week 2 → Python Projects</div>
+    <div class="milestone">Week 3 → Git & GitHub</div>
+    <div class="milestone">Week 4 → Apply to Hackathons</div>
   </div>
 </section>
+
+<!-- Profile Modal -->
+<div id="profileModal">
+  <div class="modal-content">
+    <h2 id="modalTitle">Register</h2>
+    <input id="modalName" placeholder="Enter your name">
+    <input id="modalSkills" placeholder="Skills (comma separated)">
+    <input id="modalResume" placeholder="Resume Link (optional)">
+    <input id="modalLinkedin" placeholder="LinkedIn Profile">
+    <input id="modalGithub" placeholder="GitHub Profile">
+    <button id="saveProfile" class="primary">Save & Generate Dashboard</button>
+  </div>
+</div>
 
 <script>
-// ===== User Auth =====
-let users = [];
-let currentUser = null;
+lottie.loadAnimation({
+  container: document.getElementById('hero-lottie'),
+  renderer: 'svg',
+  loop: true,
+  autoplay: true,
+  path: 'https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json'
+});
 
-function showSection(id){
-  document.querySelectorAll('section').forEach(sec => sec.style.display='none');
-  document.getElementById(id).style.display='block';
-  window.scrollTo({ top:0, behavior:'smooth' });
-}
-
-function showLogin(){
-  document.getElementById('landing').style.display='none';
-  document.getElementById('navbar').style.display='flex';
-  showSection('login-section');
-}
-
-function signup(){
-  const email = document.getElementById('signup-email').value;
-  const password = document.getElementById('signup-password').value;
-  const msg = document.getElementById('signup-message');
-  if(email && password){
-    if(users.find(u=>u.email===email)){
-      msg.style.color='red'; msg.innerText='Email exists! Login instead.';
-    } else {
-      users.push({email,password});
-      msg.style.color='green'; msg.innerText='Account created! Please login.';
-      setTimeout(()=>showSection('login-section'),1000);
-    }
-  } else { msg.style.color='red'; msg.innerText='Fill all fields.'; }
-}
-
-function login(){
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
-  const msg = document.getElementById('login-message');
-  const user = users.find(u=>u.email===email && u.password===password);
-  if(user){
-    currentUser=user; msg.style.color='green'; msg.innerText='Login successful!';
-    setTimeout(()=>showSection('skills-section'),500);
-  } else { msg.style.color='red'; msg.innerText='Invalid email/password!'; }
-}
-
-function logout(){
-  currentUser=null;
-  showSection('login-section');
-}
-
-// ===== Call Backend for Domain Analysis =====
-async function analyzeSkills(){
-  const skillsInput = document.getElementById('user-skills').value;
-  const domain = document.getElementById('user-domain').value;
-
-  if(!skillsInput || !domain){
-    alert('Enter skills and select domain');
-    return;
-  }
-
-  const skills = skillsInput.split(',').map(s=>s.trim());
-
-  try {
-    const response = await fetch('http://127.0.0.1:8000/analyze', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ domain, skills })
-    });
-
-    const data = await response.json();
-    if(data.error){
-      alert(data.error); return;
-    }
-
-    // Populate dashboard
-    document.getElementById('skills-list').innerHTML='';
-    skills.forEach(skill=>{
-      const li = document.createElement('li'); li.innerText=skill;
-      document.getElementById('skills-list').appendChild(li);
-    });
-
-    document.getElementById('domain-display').innerText=domain;
-
-    // Roadmap
-    const roadmapList = document.getElementById('roadmap');
-    roadmapList.innerHTML='';
-    data.roadmap.forEach(item=>{
-      const li=document.createElement('li'); li.innerText=item; roadmapList.appendChild(li);
-    });
-
-    // Skill gaps
-    const resourcesList = document.getElementById('resources');
-    resourcesList.innerHTML='';
-    for(const [level, skills] of Object.entries(data.gaps)){
-      skills.forEach(skill=>{
-        const li=document.createElement('li'); li.innerText=`${skill} (${level})`; resourcesList.appendChild(li);
-      });
-    }
-
-    alert(`Your readiness score: ${data.score}% - ${data.verdict}`);
-
-    // Show dashboard
-    document.querySelectorAll('section').forEach(sec=>sec.style.display='none');
-    document.getElementById('dashboard').style.display='block';
-    window.scrollTo({ top:0, behavior:'smooth' });
-
-    // Show map
-    showMap();
-
-  } catch(error){
-    console.error('Error connecting to backend:', error);
-    alert('Could not connect to backend. Make sure FastAPI is running at http://127.0.0.1:8000');
-  }
-}
-
-// ===== Leaflet Map =====
-function showMap() {
-  const mapDiv = document.getElementById('map');
-  mapDiv.innerHTML=""; // clear old map
-
-  const defaultLat = 40.7128;
-  const defaultLng = -74.0060;
-
-  window.map = L.map('map').setView([defaultLat, defaultLng], 13);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(window.map);
-
-  const centers = [
-    {name:"SkillUp Center", lat:40.716, lng:-74.003},
-    {name:"Tech Academy", lat:40.710, lng:-74.010},
-    {name:"Hackathon Hub", lat:40.718, lng:-74.008}
-  ];
-
-  centers.forEach(center=>{
-    L.marker([center.lat, center.lng]).addTo(window.map)
-      .bindPopup(`<b>${center.name}</b>`);
+// Scroll reveal
+const reveals = document.querySelectorAll(".reveal");
+window.addEventListener("scroll", () => {
+  reveals.forEach(r => {
+    if(r.getBoundingClientRect().top < window.innerHeight - 100) r.classList.add("show");
   });
+});
 
-  window.map.invalidateSize(); // force map to render
+// Open dashboard in new page
+document.getElementById("analyzeBtn").onclick = () => {
+  const skills = document.getElementById("demoSkills").value.trim();
+  const domain = document.getElementById("demoDomain").value;
+  if(!skills){ alert("Enter your skills"); return; }
+  const url = `dashboard.html?skills=${encodeURIComponent(skills)}&domain=${encodeURIComponent(domain)}`;
+  window.open(url, "_blank");
+};
+
+// Profile modal logic
+const getStartedBtn = document.getElementById('getStartedBtn');
+const profileModal = document.getElementById('profileModal');
+const modalName = document.getElementById('modalName');
+const saveProfileBtn = document.getElementById('saveProfile');
+
+getStartedBtn.onclick = () => {
+  const existingUser = localStorage.getItem('careerbridge_user');
+  profileModal.style.display = 'flex';
+  document.getElementById('modalTitle').innerText = existingUser ? "Welcome Back!" : "Register";
+  if(existingUser) modalName.value = JSON.parse(existingUser).name;
+}
+
+saveProfileBtn.onclick = () => {
+  const name = modalName.value.trim();
+  if(!name) { alert("Enter your name"); return; }
+  localStorage.setItem('careerbridge_user', JSON.stringify({name, domain: "web"}));
+  profileModal.style.display = 'none';
+  alert(`Welcome ${name}! You can now analyze your skills.`);
 }
 </script>
-
 </body>
 </html>
